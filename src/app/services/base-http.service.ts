@@ -1,16 +1,29 @@
 import axios from "axios";
 import { Product } from "../models/product.model";
 import { Category } from "../models/category.model";
+import { UpdateProductDto } from "../dtos/product.dto";
 
 export class BaseHttpService<TypeClass>{
   data: TypeClass[] = [];
 
   constructor(
-    private url: string
+    protected url: string
   ) { };
 
   async getAll() {
     const { data } = await axios.get<TypeClass[]>(this.url);
+    return data;
+  }
+
+  async update<TypeM>(id: TypeM, changes: unknown) { // tipado de método
+    const array: TypeClass[] = []; // tipado de clase
+    const { data } = await axios.put(`${this.url}/${id}`, changes);
+    return data;
+  }
+
+  async update2<ID, DTO>(id: ID, changes: DTO) {
+    const array: TypeClass[] = [];
+    const { data } = await axios.put(`${this.url}/${id}`, changes);
     return data;
   }
 }
@@ -33,4 +46,11 @@ export class BaseHttpService<TypeClass>{
 
   const rta1 = await categoryService.getAll();  // categoryService: BaseHttpService<Category>
   console.log('categories', rta1.length);
+
+  productService.update<Product['id']>(1, {});
+
+  productService.update2<Product['id'], UpdateProductDto>(1, {
+    title: 'asdsad',
+    // name: ?? Object literal may only specify known properties, and 'name' does not exist in type 'Partial<CreateProductDto>'
+  });
 })();
