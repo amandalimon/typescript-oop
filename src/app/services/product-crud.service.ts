@@ -9,6 +9,7 @@ export class ProductCRUDService {
   async update(id: Product['id'], dto: UpdateProductDto) {
     // code
     // etc, etc..
+    // validate (dto)
     this.http.otroRequest
     return this.http.update(id, dto);
   }
